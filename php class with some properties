@@ -1,0 +1,85 @@
+<html>
+    <head><title></title>
+    </head>
+   <body>
+        <h1>
+        <?php
+
+
+class Vehicle {
+    public $make;
+    public $model;
+    public $year;
+    public $rentalPrice;
+    public $isRented;
+
+    public function __construct($make, $model, $year, $rentalPrice) {
+        $this->make = $make;
+        $this->model = $model;
+        $this->year = $year;
+        $this->rentalPrice = $rentalPrice;
+        $this->isRented = false;
+    }
+
+    public function rent() {
+        if (!$this->isRented) {
+            $this->isRented = true;
+            return true; // Vehicle successfully rented
+        } else {
+            return false; // Vehicle is not available for rent
+        }
+    }
+
+    public function returnVehicle() {
+        if ($this->isRented) {
+            $this->isRented = false;
+            return true; // Vehicle successfully returned
+        } else {
+            return false; // Vehicle is already available
+        }
+    }
+
+    public function calculateRentalFee($days) {
+        if ($days <= 0) {
+            return 0; // No rental fee if duration is negative or zero
+        }
+        return $this->rentalPrice * $days;
+    }
+}
+
+// Create a new Vehicle instance
+$vehicle = new Vehicle("Toyota", "Camry", 2020, 50);
+
+// Rent the vehicle
+if ($vehicle->rent()) {
+    echo "Vehicle rented successfully!<br>";
+} else {
+    echo "Vehicle is not available for rent.<br>";
+}
+
+// Check if rental duration is provided by the user
+if (isset($_POST['rental_duration'])) {
+    $rentalDuration = intval($_POST['rental_duration']);
+
+    // Calculate rental fee for the provided duration
+    $rentalFee = $vehicle->calculateRentalFee($rentalDuration);
+    echo "Rental fee for $rentalDuration days: $rentalFee<br>";
+
+    // Return the vehicle
+    if ($vehicle->returnVehicle()) {
+        echo "Vehicle returned successfully!<br>";
+    } else {
+        echo "Vehicle is already available.<br>";
+    }
+} else {
+    // Display form to input rental duration
+    echo '<form method="post">';
+    echo 'Enter rental duration (in days): <input type="text" name="rental_duration"><br>';
+    echo '<input type="submit" value="Calculate Rental Fee">';
+    echo '</form>';
+}
+
+?>
+        </h1>
+</body>
+</html>
